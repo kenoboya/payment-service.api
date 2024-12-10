@@ -1,6 +1,9 @@
 package model
 
 type PaymentIntentData struct {
-	StripeToken string
-	Amount      int64
+	Amount         int64
+	Currency       string
+	Payment_method string
+	Confirm        bool
+	Token          string
 }

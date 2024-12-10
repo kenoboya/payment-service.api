@@ -7,6 +7,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/spf13/viper"
 	"github.com/subosito/gotenv"
+
 	"go.uber.org/zap"
 )
 
@@ -15,10 +16,6 @@ type Config struct {
 	Stripe StripeConfig
 }
 
-type StripeConfig struct{
-	APIKey string
-	WebhookSecret string
-}
 type GrpcConfig struct {
 	Addr string `mapstructure:"port"`
 }

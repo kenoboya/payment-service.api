@@ -1,6 +1,8 @@
 package service
 
 import (
+	"payment-api/internal/model"
+
 	"github.com/stripe/stripe-go/v81"
 	"github.com/stripe/stripe-go/v81/customer"
 	"github.com/stripe/stripe-go/v81/paymentintent"
@@ -13,9 +15,11 @@ func NewPaymentsService() *PaymentsService {
 	return &PaymentsService{}
 }
 
-func (s *PaymentsService) CreatePaymentIntent(customerData model.CustomerData, paymentIntentData model.PaymentIntentData) (transactionID string, err error) {
+func (s *PaymentsService) CreatePaymentIntent(customerData model.CustomerData, paymentIntentData model.PaymentIntentData ) (transactionID string, err error) {
 	paramsCustomer:= &stripe.CustomerParams{
-		// Email:
+		Email: &customerData.Email,
+		Name: &customerData.Name,
+		Phone: &customerData.Phone,
 	}
 	c, err:= customer.New(paramsCustomer)
 	if err != nil {
@@ -23,13 +27,14 @@ func (s *PaymentsService) CreatePaymentIntent(customerData model.CustomerData, p
 	}
 
 	paramsIntent := &stripe.PaymentIntentParams{
-		Amount: stripe.Int64(paymentIntentData.amount),
+		Amount: stripe.Int64(paymentIntentData.Amount),
 		Currency: stripe.String(string(stripe.CurrencyUAH)),
-		PaymentMethod: stripe.String(paymentIntentData.stripeToken),
+		PaymentMethod: stripe.String(paymentIntentData.Token),
 		Confirm: stripe.Bool(true),
 		Customer: stripe.String(c.ID),
 		ReceiptEmail: stripe.String(customerData.Email),
 	}
+	
 	pi, err:= paymentintent.New(paramsIntent)
 	if err != nil{
 		// logger
@@ -37,6 +42,7 @@ func (s *PaymentsService) CreatePaymentIntent(customerData model.CustomerData, p
 
 	return pi.ID, nil
 }
+
 func (s *PaymentsService) ConfirmPayment(transactionID string) (bool, error) {
 	pi, err:= paymentintent.Get(transactionID, nil)
 	if err != nil {
