@@ -1,9 +1,9 @@
 package model
 
 type PaymentIntentData struct {
-	Amount         int64
-	Currency       string
-	Payment_method string
-	Confirm        bool
-	Token          string
+	Amount        int64
+	Currency      string
+	PaymentMethod string
+	Confirm       bool
+	OrderID       int64
 }

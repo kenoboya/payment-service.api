@@ -3,6 +3,7 @@ package grpc_server
 import (
 	"net"
 	"payment-api/internal/config"
+	"payment-api/internal/server/grpc/proto"
 	grpc_handler "payment-api/internal/transport/grpc"
 	logger "payment-api/pkg/logger/zap"
 
@@ -36,8 +37,15 @@ func (s *server) Run() error{
 	logger.Info("Starting gRPC server",
 		zap.String("address", s.addr),
 	)
-	
-	// ... TODO proto.Payment
+	proto.RegisterPaymentServiceServer(s.srv, s.handler)
+	if err := s.srv.Serve(lis); err != nil {
+		logger.Error("Failed to serve gRPC server",
+			zap.String("server", "grpc"),
+			zap.String("address", s.addr),
+			zap.Error(err),
+		)
+		return err
+	}
 	
 	return nil
 }

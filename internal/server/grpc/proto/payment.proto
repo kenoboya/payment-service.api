@@ -9,7 +9,7 @@ message PaymentIntentData {
     string currency = 2;  
     string payment_method = 3;
     bool confirm = 4;
-    string token = 5;
+    int64 order_id = 5;
 }
 
 message CustomerData {
@@ -18,7 +18,7 @@ message CustomerData {
     string phone = 3;        
 }
 
-message CreatePaymentIntentRequest {
+message PaymentRequest {
     PaymentIntentData payment_intent = 1;
     CustomerData customer = 2;
 }
@@ -28,5 +28,5 @@ message PaymentResponse {
 }
 
 service PaymentService {
-    rpc CreatePaymentIntent(CreatePaymentIntentRequest) returns (PaymentResponse);
+    rpc CreatePaymentIntent(PaymentRequest) returns (PaymentResponse);
 }
